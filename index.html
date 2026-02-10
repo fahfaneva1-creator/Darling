@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fitiavantsika Roa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff758f;
+            --bg: #fff0f3;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- BACKGROUND ANIMATION (HEARTS) --- */
+        .heart-bg {
+            position: fixed;
+            bottom: -50px;
+            color: var(--primary);
+            font-size: 20px;
+            user-select: none;
+            z-index: -1;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- SCREEN MANAGEMENT --- */
+        .screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.8);
+        }
+
+        .screen.active {
+            display: flex; opacity: 1; transform: scale(1);
+        }
+
+        /* --- LOGIN & PROFILE --- */
+        .profile-circle {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.3);
+            overflow: hidden;
+            margin-bottom: 15px;
+            cursor: pointer; /* Mba hiseho hoe azo kitihina */
+        }
+        .profile-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .app-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            margin: 0 0 30px;
+        }
+
+        .input-group {
+            background: var(--glass);
+            width: 100%; max-width: 320px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .input-group input { border: none; outline: none; background: none; width: 100%; margin-left: 10px; font-size: 1rem; }
+
+        .main-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none;
+            width: 100%; max-width: 320px;
+            padding: 16px; border-radius: 30px;
+            font-weight: 600; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+            transition: 0.3s;
+        }
+        .main-button:active { transform: scale(0.95); }
+
+        /* --- MENU & GALLERY --- */
+        .menu-card {
+            width: 100%; max-width: 400px; height: 150px;
+            border-radius: 25px; margin-bottom: 20px;
+            overflow: hidden; background-size: cover; background-position: center;
+            position: relative; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card-overlay {
+            background: rgba(0,0,0,0.3);
+            width: 100%; height: 100%; padding: 20px;
+            display: flex; flex-direction: column; justify-content: flex-end; color: white;
+        }
+
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 12px; width: 100%; overflow-y: auto; padding: 10px;
+        }
+        .img-wrapper { position: relative; width: 100%; height: 140px; border-radius: 15px; overflow: hidden; animation: popIn 0.4s ease; }
+        .gallery-item { width: 100%; height: 100%; object-fit: cover; }
+
+        .del-btn {
+            position: absolute; top: 5px; right: 5px;
+            background: var(--primary); color: white; border: none;
+            width: 25px; height: 25px; border-radius: 50%;
+            font-weight: bold; cursor: pointer;
+        }
+
+        .note-item {
+            background: var(--white); padding: 15px; border-radius: 18px;
+            margin-bottom: 12px; border-left: 6px solid var(--primary);
+            width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative; animation: slideIn 0.3s ease;
+        }
+
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+        @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Audio Toggle Button */
+        .music-toggle {
+            position: fixed; bottom: 20px; right: 20px;
+            background: white; border-radius: 50%; width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; z-index: 100;
+        }
+        
+        .music-hint {
+            position: absolute; top: -30px; font-size: 10px; background: var(--primary);
+            color: white; padding: 2px 8px; border-radius: 10px; width: 70px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="myAudio" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-toggle" id="musicBtn" onclick="toggleMusic()">
+        <span class="music-hint">Play Music ❤️</span>
+        <span id="musicIcon">🔇</span>
+    </div>
+
+    <section id="login-screen" class="screen active">
+        <div class="profile-circle" onclick="toggleMusic()">
+            <img src="sary.jpg" id="loginPic" onerror="this.src='https://via.placeholder.com/150'" alt="Beloved">
+        </div>
+        <h1 class="app-title">Fitiavantsika Roa</h1>
+        <div class="input-group"><span>👤</span><input type="text" id="user" placeholder="Anarany malalako❤️"></div>
+        <div class="input-group"><span>🔒</span><input type="password" id="pass" placeholder="Teny miafina tsika kia❤️"></div>
+        <button class="main-button" onclick="login()">Hiditra ❤️</button>
+    </section>
+
+    <section id="menu-screen" class="screen">
+        <header style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="margin:0; color:#b71c1c;">TONGASOA MALALAKO❤️</h2>
+            <button onclick="nav('login-screen')" style="background:none; border:none; font-size:24px;">➔</button>
+        </header>
+
+        <div class="menu-card" style="background-image:url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400')" onclick="nav('photos-screen')">
+            <div class="card-overlay"><h3>Our Photos</h3><p>Ireo fahatsiarovantsika atramzay❤️</p></div>
+        </div>
+        <div class="menu-card" style="background-image:url('https://images.unsplash.com/photo-1516195851888-6f1a981a8a2a?w=400')" onclick="nav('words-screen')">
+            <div class="card-overlay"><h3>Sweet Words</h3><p>Teny mamy ho anao❤️</p></div>
+        </div>
+        <footer style="margin-top:auto; font-family:'Dancing Script'; color:var(--primary); font-size:1.6rem;">Fitiavantsika Roa</footer>
+    </section>
+
+    <section id="photos-screen" class="screen">
+        <button onclick="nav('menu-screen')" style="align-self:start; background:none; border:none; font-size:30px; color:var(--primary);">←</button>
+        <h2 style="font-family:'Dancing Script'; font-size:2rem;">Gallery</h2>
+        <label for="up" style="background:var(--primary); color:white; padding:12px 25px; border-radius:30px; cursor:pointer; margin-bottom:20px; font-weight:600;">+ Add New Memory</label>
+        <input type="file" id="up" multiple accept="image/*" hidden>
+        <div id="gal" class="gallery-grid"></div>
+    </section>
+
+    <section id="words-screen" class="screen">
+        <button onclick="nav('menu-screen')" style="align-self:start; background:none; border:none; font-size:30px; color:var(--primary);">←</button>
+        <h2 style="font-family:'Dancing Script'; font-size:2rem;">Note Pad</h2>
+        <textarea id="txt" placeholder="Soraty eto ny teny mamy..."></textarea>
+        <button class="main-button" onclick="saveNote()" style="margin-top:10px;">Tehirizo ❤️</button>
+        <div id="list" style="width:100%; margin-top:20px; overflow-y:auto; flex:1;"></div>
+    </section>
+
+    <script>
+        // --- FLOATING HEARTS ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-bg';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 500);
+
+        // --- MUSIC CONTROL ---
+        const audio = document.getElementById('myAudio');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicHint = document.querySelector('.music-hint');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicIcon.innerText = "🎵";
+                musicHint.style.display = "none";
+            } else {
+                audio.pause();
+                musicIcon.innerText = "🔇";
+            }
+        }
+
+        // NAVIGATION
+        function nav(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            setTimeout(() => { document.getElementById(id).classList.add('active'); }, 50);
+        }
+
+        function login() {
+            if(document.getElementById('user').value !== "" && document.getElementById('pass').value !== "") {
+                audio.play(); // Manomboka mozika raha mbola tsy nandeha
+                musicIcon.innerText = "🎵";
+                musicHint.style.display = "none";
+                nav('menu-screen');
+            } else { alert("Fenoy ny banga azafady ❤️"); }
+        }
+
+        // NOTES & PHOTOS LOGIC (LocalStorage mitovy amin'ny teo aloha)
+        function saveNote() {
+            const val = document.getElementById('txt').value;
+            if(val) {
+                let notes = JSON.parse(localStorage.getItem('f_notes') || "[]");
+                notes.unshift(val);
+                localStorage.setItem('f_notes', JSON.stringify(notes));
+                renderNotes();
+                document.getElementById('txt').value = "";
+            }
+        }
+
+        function renderNotes() {
+            const list = document.getElementById('list');
+            list.innerHTML = "";
+            let notes = JSON.parse(localStorage.getItem('f_notes') || "[]");
+            notes.forEach((n, idx) => {
+                const d = document.createElement('div');
+                d.className = 'note-item';
+                d.innerHTML = n + `<button onclick="delNote(${idx})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:red; cursor:pointer; font-size:18px;">×</button>`;
+                list.appendChild(d);
+            });
+        }
+
+        function delNote(idx) {
+            let notes = JSON.parse(localStorage.getItem('f_notes') || "[]");
+            notes.splice(idx, 1);
+            localStorage.setItem('f_notes', JSON.stringify(notes));
+            renderNotes();
+        }
+
+        document.getElementById('up').addEventListener('change', function(e) {
+            Array.from(e.target.files).forEach(f => {
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    let photos = JSON.parse(localStorage.getItem('f_photos') || "[]");
+                    photos.unshift(ev.target.result);
+                    localStorage.setItem('f_photos', JSON.stringify(photos));
+                    renderPhotos();
+                };
+                r.readAsDataURL(f);
+            });
+        });
+
+        function renderPhotos() {
+            const gal = document.getElementById('gal');
+            gal.innerHTML = "";
+            let photos = JSON.parse(localStorage.getItem('f_photos') || "[]");
+            photos.forEach((p, idx) => {
+                const wrap = document.createElement('div');
+                wrap.className = 'img-wrapper';
+                wrap.innerHTML = `<img src="${p}" class="gallery-item"><button class="del-btn" onclick="delPhoto(${idx})">×</button>`;
+                gal.appendChild(wrap);
+            });
+        }
+
+        function delPhoto(idx) {
+            if(confirm("Hamafa ity sary ity ve ianao? ❤️")) {
+                let photos = JSON.parse(localStorage.getItem('f_photos') || "[]");
+                photos.splice(idx, 1);
+                localStorage.setItem('f_photos', JSON.stringify(photos));
+                renderPhotos();
+            }
+        }
+
+        window.onload = () => { renderNotes(); renderPhotos(); };
+    </script>
+</body>
+</html>

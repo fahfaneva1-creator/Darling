@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Surprise ho anao ✨❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff4d6d; --bg: #fff0f3; }
+        body { 
+            margin: 0; font-family: 'Poppins', sans-serif; 
+            background: var(--bg); overflow: hidden; 
+            display: flex; justify-content: center; align-items: center; height: 100vh; 
+        }
+
+        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        .active { display: flex; }
+
+        /* --- ANIMATION GIFT 1 --- */
+        .gift { font-size: 80px; cursor: pointer; animation: bounce 1.5s infinite; }
+        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        /* --- HEART SHAPE (Misy soratra ao anatiny) --- */
+        .heart-box { 
+            position: relative; width: 150px; height: 150px; background: var(--primary); 
+            transform: rotate(-45deg); margin-bottom: 80px; 
+            box-shadow: 0 0 30px rgba(255,77,109,0.4); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .heart-box::before, .heart-box::after { 
+            content: ''; position: absolute; width: 150px; height: 150px; 
+            background: var(--primary); border-radius: 50%; 
+        }
+        .heart-box::before { top: -75px; left: 0; }
+        .heart-box::after { left: 75px; top: 0; }
+        
+        .heart-text { 
+            transform: rotate(45deg); color: white; z-index: 10; 
+            font-family: 'Dancing Script', cursive; font-size: 1.3rem; 
+            text-align: center; width: 140px;
+        }
+
+        /* --- GIFT 2 (Eo ambany fo) --- */
+        .gift-letter { 
+            font-size: 60px; cursor: pointer; z-index: 50;
+            animation: swing 2s ease-in-out infinite; margin-top: -20px;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* --- NUAGE STYLE --- */
+        .nuage-box {
+            display: none; position: relative; background: #fff;
+            padding: 25px; border-radius: 50px;
+            font-family: 'Dancing Script', cursive; font-size: 1.2rem;
+            max-width: 280px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-top: -40px; margin-bottom: 20px; z-index: 10;
+            animation: popIn 0.5s ease forwards;
+        }
+        .nuage-box::after {
+            content: ''; position: absolute; background: #fff;
+            width: 40px; height: 40px; border-radius: 50%;
+            top: -15px; left: 40px; box-shadow: 50px -10px 0 10px #fff;
+        }
+        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* --- BUTTONS --- */
+        .btn-wrap { display: none; gap: 30px; z-index: 100; margin-top: 10px; }
+        .btn { 
+            padding: 15px 35px; border-radius: 30px; border: none; 
+            font-weight: 600; cursor: pointer; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        #yes-btn { background: #2ecc71; }
+        #no-btn { background: #e74c3c; position: relative; }
+
+        .h-float { position: fixed; bottom: -20px; color: var(--primary); opacity: 0.5; z-index: -1; animation: up 5s linear infinite; }
+        @keyframes up { to { transform: translateY(-110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="p1" class="page active">
+        <div class="gift" onclick="go(2)">🎁</div>
+        <h2 style="color:var(--primary); font-family:'Dancing Script'; font-size: 2.2rem; margin-top: 20px;">Misy surprise ho any malalako ato❤️</h2>
+    </div>
+
+    <div id="p2" class="page">
+        <div class="heart-box">
+            <div class="heart-text">Malala oh✨❤️Te hiteny fotsiny aho hoe "Tena tiako ianao❤️❤️"</div>
+        </div>
+        
+        <div id="gift-trigger" class="gift-letter" onclick="unfold()">💌</div>
+        <p>Mba tsindrio ☝️io☝️message io🙏🥹✨</p>
+
+        <div id="nuage" class="nuage-box">
+            Mbola vonona hiara dalana amiko mandrakizay ve ianao ry tiko? ❤️
+        </div>
+
+        <div id="btn-reveal" class="btn-wrap">
+            <button id="yes-btn" class="btn" onclick="openApp()">ENY</button>
+            <button id="no-btn" class="btn" onmouseover="mitsaoka()" ontouchstart="mitsaoka()">TSIA</button>
+        </div>
+    </div>
+
+    <script>
+        function go(n) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('p'+n).classList.add('active');
+        }
+
+        function unfold() {
+            document.getElementById('gift-trigger').style.display = 'none';
+            document.getElementById('nuage').style.display = 'block';
+            document.getElementById('btn-reveal').style.display = 'flex';
+        }
+
+        function mitsaoka() {
+            const b = document.getElementById('no-btn');
+            const x = Math.random() * (window.innerWidth - 120);
+            const y = Math.random() * (window.innerHeight - 120);
+            b.style.position = 'fixed';
+            b.style.left = x + 'px';
+            b.style.top = y + 'px';
+        }
+
+        function openApp() {
+            window.location.href = "index.html"; 
+        }
+
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.className = 'h-float'; h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }, 400);
+    </script>
+</body>
+</html>
